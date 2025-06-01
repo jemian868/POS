@@ -1,4 +1,4 @@
-<div class="route-container">
+<div class="route-container" ng-init="getProduct()">
   <!-- Header -->
   <div class="route-header">
     <div class="route-header-title">
@@ -17,44 +17,69 @@
       <small>PRODUCT DETAILS</small>
       <span>CATEGORY</span>
       <div class="select-container">
-        <input type="text" disabled value="- Select Category -">
-        <i class="fa fa-plus"></i>
+        <select ng-model="addProductCategory" disabled>
+          <option ng-repeat="i in category_data" value="{{i.id}}">{{ i.category }}</option>
+        </select>
+        <i class="fa fa-plus" ng-click="getCategory()" data-toggle="modal" data-target="#modal_id"></i>
       </div>
       <span>PRODUCT NAME</span>
-      <input type="text">
+      <input ng-model="addProductName" type="text">
       <span>PRODUCT TYPE</span>
       <div class="select-container">
-        <input type="text" disabled value="- Select Product Type -">
-        <i class="fa fa-plus"></i>
+        <select ng-model="addProductType" disabled>
+          <option ng-repeat="i in type_data" value="{{i.id}}">{{ i.type }}</option>
+        </select>
+        <i class="fa fa-plus" ng-click="getType()" data-toggle="modal" data-target="#modal_id"></i>
       </div>
-      <span>PRODUCT DOSAGE</span>
+      <span>PRODUCT SIZE</span>
       <div class="select-container">
-        <input type="text" disabled value="- Select Product Size -">
-        <i class="fa fa-plus"></i>
+        <select ng-model="addProductSize" disabled>
+          <option ng-repeat="i in size_data" value="{{i.id}}">{{ i.size }}</option>
+        </select>
+        <i class="fa fa-plus" ng-click="getSize()" data-toggle="modal" data-target="#modal_id"></i>
       </div>
       <span>PRODUCT ORIGINAL PRICE</span>
-      <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
+      <input ng-model="addProductOriginalPrice" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
       <span>PRODUCT SELLING PRICE</span>
-      <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
+      <input ng-model="addProductSellingPrice" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
+      <span>REORDER LIMIT</span>
+      <input ng-model="addReorderLimit" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
       <span>SUPPLIER</span>
       <div class="select-container">
-        <input type="text" disabled value="- Select Supplier -">
-        <i class="fa fa-plus"></i>
+        <select ng-model="addProductSupplier" disabled>
+          <option ng-repeat="i in supplier_data" value="{{i.id}}">{{ i.supplier }}</option>
+        </select>
+        <i class="fa fa-plus" ng-click="getSupplier()" data-toggle="modal" data-target="#modal_id"></i>
       </div>
       
-      <button class="btn btn-success"><i class="fa fa-box"></i> Add Product</button>
+      <div class="buttons-container">
+        <button ng-if="!updateProductId" ng-click="createProduct()" class="btn btn-success"><i class="fa fa-plus"></i> Create Product</button>
+        <button ng-if="updateProductId" class="btn btn-primary"><i class="fa fa-edit"></i> Update </button>
+        <button ng-if="updateProductId" class="btn btn-danger"><i class="fa fa-times"></i> Cancel</button>
+      </div>
     </div>
 
     <div class="product-container">
       <custom-table 
         search="search"
-        column="stocks_columns" 
-        data="stocks_data" 
-        actions="stocks_actions">
+        column="product_columns" 
+        data="product_data" 
+        actions="product_actions">
       </custom-table>
     </div>
   </div>
 </div>
+
+<!-- Modal -->
+<custom-modal
+  modal-id="modal_id"
+  modal-title="modal_header"
+  modal-size="modal-lg"
+  input-action="input_action"
+  table-data="table_data">
+</custom-modal>
+
+
 
 <style>
   .product-container {
@@ -89,9 +114,16 @@
     border: 1px solid #ccc; 
     border-radius: 5px;
   }
-  .add-product-container button {
-    width: 100%;
-    padding: 5px;
+  .buttons-container {
+    display: flex;           /* Enable flex layout */
+    flex-direction: row;     /* Align children in a row (horizontal) */
+    justify-content: flex-start;  /* Align items to the start (left) */
+    align-items: center;     /* Optional: vertically center the items */
+    gap: 16px;  
+  }
+  .buttons-container > button {
+    min-width: 25%;
+    padding: 10px 15px;
     font-size: 13px;
   }
   .select-container {
@@ -102,15 +134,16 @@
     border-radius: 5px;
     background: #f0f0f0;
   }
-  .select-container input {
+  .select-container select {
     width: 100%;
     height: 100%;
-    padding: 5px;
+    padding: 7px 5px;
     outline: none;
     border: none;
     background: #fff;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
+    appearance: none;
   }
   .select-container i {
     padding: 7px;

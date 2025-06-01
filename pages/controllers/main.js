@@ -1,4 +1,4 @@
-app.controller("main", function ($scope, $location) {
+app.controller("main", function ($scope, $http, $location) {
   $scope.routes = [
     { label: "Dashboard", icon: "fa fa-chart-simple", path: "#dashboard" },
     { label: "Sales", icon: "fa fa-cart-plus", path: "#sales" },
@@ -35,4 +35,53 @@ app.controller("main", function ($scope, $location) {
         break;
     }
   });
+
+  // Form Validator
+  $scope.validateForm = (fields) => {
+    for (let field of fields) {
+      const { label = 'Field', model, rule = 'text' } = field;
+
+      if (rule === 'required') {
+        if (!model || model.toString().trim() === '') {
+          return `${label} is required.`;
+        }
+      }
+
+      if (rule === 'number') {
+        const parsed = parseFloat(model);
+        if (isNaN(parsed)) {
+          return `${label} must be a valid number.`;
+        }
+      }
+    }
+
+    return null; // null = no error
+  }
+
+  // Get
+  $scope.get = ({
+    path,
+    data,
+  }) => {
+    if (data) { // fetch data base on the condition
+      console.log('fetch data');
+    } else { // fetch all data
+      return $http({
+        method: 'get',
+        url: path,
+      }).then(function (data) {
+        return data.data;
+      });
+    }
+  }
+
+  // Create
+  $scope.create = ({
+    path,
+    data,
+  }) => {
+    return $http.post(path, data).then(function (response) {
+      return response.data;
+    })
+  }
 });

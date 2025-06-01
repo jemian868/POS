@@ -32,3 +32,6 @@ var app = angular
         redirectTo: "/dashboard",
       });
   });
+
+var myalert = new Myalert();
+$(document).ready(function () { myalert.initialize() });
