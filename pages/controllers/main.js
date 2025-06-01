@@ -84,4 +84,14 @@ app.controller("main", function ($scope, $http, $location) {
       return response.data;
     })
   }
+
+  // Update
+  $scope.update = ({
+    path,
+    data,
+  }) => {
+    return $http.put(path, data).then(function (response) {
+      return response.data;
+    })
+  }
 });

@@ -1,10 +1,11 @@
-app.directive("customModal", function () {
+app.directive("customModal", function ($parse) {
   return {
     restrict: "E",
     scope: {
       modalId: "@",
       modalTitle: "=",
       modalSize: "@",
+      inputFields: "=?",
       inputAction: "=?",
       tableData: "=?",
     },
@@ -17,24 +18,11 @@ app.directive("customModal", function () {
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-              <!-- Render Form Fields -->
-              <div ng-if="fields && fields.length">
-                <div ng-repeat="field in fields" class="form-group">
-                  <label>{{field.label}}</label>
-                  <input
-                    ng-if="field.type === 'text'"
-                    type="text"
-                    class="form-control"
-                    ng-model="model[field.model]"
-                    ng-disabled="field.disabled"
-                  />
-                  <select
-                    ng-if="field.type === 'select'"
-                    class="form-control"
-                    ng-model="model[field.model]"
-                    ng-disabled="field.disabled">
-                    <option ng-repeat="opt in field.options" value="{{opt}}">{{opt}}</option>
-                  </select>
+              <!-- INPUTS and ACTION -->
+              <div ng-if="inputFields">
+                <div class="form-group" ng-repeat="field in inputFields.fields">
+                  <input type="{{field.type}}" placeholder="{{field.placeholder}}" class="form-control"
+                         ng-model="field._value" />
                 </div>
               </div>
 
@@ -55,18 +43,36 @@ app.directive("customModal", function () {
                 </custom-table>
               </div>
             </div>
-          
+            <div class="modal-footer">
+              <button ng-click="submitInputFields()" class="btn btn-success btn-sm"><i class="fa fa-paper-plane"></i> Submit</button>
+            </div>
           </div>
         </div>
       </div>
     `,
-    link: function (scope) {
-      if (scope.tableVisible === undefined) scope.tableVisible = false;
-      scope.submit = function () {
-        if (scope.onSubmit) {
-          scope.onSubmit({ data: scope.model });
+    link: function (scope, element, attrs) {
+      // Dynamically bind _value to actual model on parent scope
+      if (scope.inputFields?.fields?.length) {
+        scope.inputFields.fields.forEach(field => {
+          const getter = $parse(field.model);
+          const setter = getter.assign;
+          // Initialize _value from parent
+          field._value = getter(scope.$parent);
+          // Watch for changes and push them to the actual parent model
+          scope.$watch(() => field._value, (newVal) => {
+            setter(scope.$parent, newVal);
+          });
+        });
+      }
+
+      scope.submitInputFields = function () {
+        if (scope.inputFields?.action) {
+          const result = scope.inputFields.fields.map(field => ({
+            model: field.model,
+            value: field._value !== "" ? field._value : undefined
+          }));
+          scope.inputFields.action(result);
         }
-        $("#" + scope.modalId).modal("hide");
       };
     }
   };

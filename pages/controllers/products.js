@@ -1,8 +1,103 @@
 app.controller("products", function ($scope) {
-  $scope.updateProduct = (data) => {
-    $scope.updateProductId = data.id;
+  $scope.init = async () => {
+    const categoryPayload = { path: '../services/category/get.php', }
+    const supplierPayload = { path: '../services/supplier/get.php', }
+    const sizePayload = { path: '../services/size/get.php', }
+    const typePayload = { path: '../services/type/get.php', }
 
-    console.log('test', data);
+    $scope.category_data = await $scope.get(categoryPayload);
+    $scope.type_data = await $scope.get(typePayload);
+    $scope.size_data = await $scope.get(sizePayload);
+    $scope.supplier_data = await $scope.get(supplierPayload);
+  }
+
+  // clear modal props
+  $scope.clearModal = () => {
+    $scope.modal_header = '';
+    $scope.add_stock_field = undefined;
+    $scope.input_action = undefined;
+    $scope.table_data = undefined;
+  }
+
+  $scope.addStock = (data) => {
+    console.log(data)
+  }
+
+  $scope.openModalAddStock = (data) => {
+    $scope.clearModal();
+
+    $scope.modal_header = "Add Stock";
+    $scope.add_stock_field = {
+      fields: [
+        { model: 'addStockModel', type: 'number', placeholder: 'Enter Quantity' },
+      ],
+      action: $scope.addStock
+    };
+
+    $('#modal_id').modal('show');
+    console.log(data);
+  }
+
+  $scope.viewToUpdateProduct = (data) => {
+    $scope.updateProductId = data.id;
+    $scope.addProductName = data.name;
+    $scope.addReorderLimit = data.quantity_limit;
+    $scope.addProductOriginalPrice = data.original_price;
+    $scope.addProductSellingPrice = data.selling_price;
+    $scope.addProductCategory = data.category_id;
+    $scope.addProductSize = data.size_id;
+    $scope.addProductType = data.type_id;
+    $scope.addProductSupplier = data.supplier_id;
+  }
+
+  $scope.updateProduct = async () => {
+    const updateProductForm = [
+      { model: $scope.addProductCategory, label: 'Category', rule: 'number' },
+      { model: $scope.addProductName, label: 'Product Name', rule: 'required' },
+      { model: $scope.addProductType, label: 'Product Type', rule: 'number' },
+      { model: $scope.addProductSize, label: 'Product Size', rule: 'number' },
+      { model: $scope.addProductOriginalPrice, label: 'Original Price', rule: 'number' },
+      { model: $scope.addProductSellingPrice, label: 'Selling Price', rule: 'number' },
+      { model: $scope.addReorderLimit, label: 'Reorder Limit', rule: 'number' },
+      { model: $scope.addProductSupplier, label: 'Supplier', rule: 'number' },
+    ];
+
+    const error = $scope.validateForm(updateProductForm);
+    if (error) { myalert.warning('WARNING!', error); return; }
+
+    const payload = {
+      path: '../services/product/update.php',
+      data: {
+        id: $scope.updateProductId,
+        name: $scope.addProductName,
+        quantity_limit: $scope.addReorderLimit,
+        original_price: $scope.addProductOriginalPrice,
+        selling_price: $scope.addProductSellingPrice,
+        category_id: $scope.addProductCategory,
+        size_id: $scope.addProductSize,
+        type_id: $scope.addProductType,
+        supplier_id: $scope.addProductSupplier,
+      }
+    }
+
+    const response = await $scope.update(payload);
+    if (response === 'success') {
+      $scope.getProduct();
+      $scope.clearAddProductForm();
+      myalert.success("SUCCESS!", "Product updated.");
+    }
+  }
+
+  $scope.clearAddProductForm = () => {
+    $scope.updateProductId = '';
+    $scope.addProductName = '';
+    $scope.addReorderLimit = '';
+    $scope.addProductOriginalPrice = '';
+    $scope.addProductSellingPrice = '';
+    $scope.addProductCategory = '';
+    $scope.addProductSize = '';
+    $scope.addProductType = '';
+    $scope.addProductSupplier = '';
   }
 
   $scope.product_columns = [
@@ -16,8 +111,8 @@ app.controller("products", function ($scope) {
     { label: "Quantity", type: "text", field: "quantity_stock" },
   ];
   $scope.product_actions = [
-    { icon: "fa fa-edit", iconSize: '15px', action: $scope.updateProduct },
-    { icon: "fa fa-boxes-stacked", iconSize: '15px', action: $scope.addBTN },
+    { icon: "fa fa-edit", iconSize: '15px', action: $scope.viewToUpdateProduct },
+    { icon: "fa fa-box-open", iconSize: '15px', action: $scope.openModalAddStock },
   ];
 
   /**
@@ -93,7 +188,7 @@ app.controller("products", function ($scope) {
   // SELECT Category
   $scope.selectCategory = (data) => {
     $scope.addProductCategory = data.id
-    $('#addProductModal').modal('hide');
+    $('#modal_id').modal('hide');
   }
   // CREATE Category
   $scope.createCategory = async (data) => {
@@ -148,7 +243,7 @@ app.controller("products", function ($scope) {
   // SELECT Product Type
   $scope.selectType = (data) => {
     $scope.addProductType = data.id
-    $('#addProductModal').modal('hide');
+    $('#modal_id').modal('hide');
   }
   // CREATE Product Type
   $scope.createType = async (data) => {
@@ -203,7 +298,7 @@ app.controller("products", function ($scope) {
   // SELECT Product Size
   $scope.selectSize = (data) => {
     $scope.addProductSize = data.id
-    $('#addProductModal').modal('hide');
+    $('#modal_id').modal('hide');
   }
   // CREATE Product Size
   $scope.createSize = async (data) => {
@@ -258,7 +353,7 @@ app.controller("products", function ($scope) {
   // SELECT Suppliers
   $scope.selectSupplier = (data) => {
     $scope.addProductSupplier = data.id
-    $('#addProductModal').modal('hide');
+    $('#modal_id').modal('hide');
   }
   // CREATE Suppliers
   $scope.createSupplier = async (data) => {

@@ -1,4 +1,4 @@
-<div class="route-container" ng-init="getProduct()">
+<div class="route-container" ng-init="getProduct(); init()">
   <!-- Header -->
   <div class="route-header">
     <div class="route-header-title">
@@ -54,8 +54,8 @@
       
       <div class="buttons-container">
         <button ng-if="!updateProductId" ng-click="createProduct()" class="btn btn-success"><i class="fa fa-plus"></i> Create Product</button>
-        <button ng-if="updateProductId" class="btn btn-primary"><i class="fa fa-edit"></i> Update </button>
-        <button ng-if="updateProductId" class="btn btn-danger"><i class="fa fa-times"></i> Cancel</button>
+        <button ng-if="updateProductId" ng-click="updateProduct()" class="btn btn-primary"><i class="fa fa-edit"></i> Update </button>
+        <button ng-if="updateProductId" ng-click="clearAddProductForm()" class="btn btn-danger"><i class="fa fa-times"></i> Cancel</button>
       </div>
     </div>
 
@@ -75,11 +75,10 @@
   modal-id="modal_id"
   modal-title="modal_header"
   modal-size="modal-lg"
+  input-fields="add_stock_field"
   input-action="input_action"
   table-data="table_data">
 </custom-modal>
-
-
 
 <style>
   .product-container {
