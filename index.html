@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="loginApp">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,17 +17,42 @@
       rel="stylesheet"
       type="text/css"
       href="assets/fontawesome/css/all.min.css" />
+    <script type="text/javascript" src="assets/JQuery/jquery.min.js"></script>
+    <!-- Angular JS -->
+    <script
+      type="text/javascript"
+      src="assets/angularJS/angular.min.js"></script>
+    <script
+      type="text/javascript"
+      src="assets/angularJS/angular-route.min.js"></script>
+    <!-- My Alert -->
+    <link rel="stylesheet" type="text/css" href="assets/myAlert/myAlert.css" />
+    <script type="text/javascript" src="assets/myAlert/myAlert.js"></script>
+    <script type="text/javascript" src="controller.js"></script>
   </head>
-  <body>
-    <div class="main-container">
+  <body ng-controller="loginController">
+    <div class="main-container" ng-init="init()">
       <div class="login-body">
         <div class="header"><i class="fa fa-user-shield"></i> SIGN IN</div>
-
-        <input type="text" placeholder="Username" />
-        <input type="password" placeholder="Password" />
-
-        <i class="fa fa-toggle-off" style="color: grey"></i>
-        <button class="btn btn-primary">Login</button>
+        <input
+          ng-model="username"
+          type="text"
+          placeholder="Username"
+          ng-keypress="checkEnter($event)" />
+        <input
+          ng-model="password"
+          type="password"
+          placeholder="Password"
+          ng-keypress="checkEnter($event)" />
+        <i
+          ng-if="remember"
+          ng-click="rememberToggle()"
+          class="fa fa-toggle-on"></i>
+        <i
+          ng-if="!remember"
+          ng-click="rememberToggle()"
+          class="fa fa-toggle-off"></i>
+        <button ng-click="login()" class="btn btn-primary">Login</button>
       </div>
     </div>
   </body>
@@ -81,8 +106,9 @@
   }
 
   .login-body > i {
-    font-size: 20px;
+    font-size: 25px;
     cursor: pointer;
+    color: rgb(26, 115, 232);
   }
 
   .login-body button {

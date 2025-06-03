@@ -8,7 +8,7 @@
     <?php include 'imports.html'; ?>
   </head>
   <body ng-controller="main">
-    <div class="main-container">
+    <div class="main-container" ng-init="checkAccount()">
       <!-- Navigation -->
       <div class="navigation-container">
         <h6>

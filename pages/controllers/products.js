@@ -28,7 +28,7 @@ app.controller("products", function ($scope) {
         quantity: quantity.value,
         expiry: expiry.value,
         product_id: $scope.product_id,
-        account_id: 1
+        account_id: $scope.account_id,
       }
     }
 

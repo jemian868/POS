@@ -7,7 +7,7 @@
     </div>
     <div class="route-header-actions">
       <input ng-model="search" type="text" placeholder="Search here...">
-      <i class="fa fa-circle-user"></i>
+      <i ng-click="logOut()" class="fa fa-circle-user"></i>
     </div>
   </div>
 

@@ -31,7 +31,7 @@ app.controller("sales", function ($scope) {
       const payload = {
         path: '../services/cart/create.php',
         data: {
-          account_id: 1,
+          account_id: $scope.account_id,
           product_id: $scope.addToCartProductId,
           quantity: quantity.value,
           batch_number: $scope.batchNumber,
@@ -57,7 +57,7 @@ app.controller("sales", function ($scope) {
   $scope.openModal = (data) => {
     $('#add_to_cart_modal_id').modal('show');
 
-    $scope.addToCartProductId = data.id;
+    $scope.addToCartProductId = parseInt(data.id);
 
     $scope.modal_header = "Add to cart";
     $scope.add_to_cart_quantity = {

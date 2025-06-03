@@ -1,4 +1,4 @@
-app.controller("main", function ($scope, $http, $location) {
+app.controller("main", function ($scope, $http, $location, $timeout) {
   $scope.routes = [
     { label: "Dashboard", icon: "fa fa-chart-simple", path: "#dashboard" },
     { label: "Sales", icon: "fa fa-cart-plus", path: "#sales" },
@@ -35,6 +35,29 @@ app.controller("main", function ($scope, $http, $location) {
         break;
     }
   });
+
+  // Trap auto logout if no account logged in
+  $scope.checkAccount = () => {
+    $scope.account_id = sessionStorage.getItem('accountId');
+    $scope.account_name = sessionStorage.getItem('accountName');
+    $scope.account_designated = sessionStorage.getItem('accountDesignation');
+    if (!$scope.account_id) {
+      location.href = '../../';
+    }
+  }
+  // Logout
+  $scope.logOut = () => {
+    myalert.confirm('Info!', 'Are you sure you want to logout?', 'Yes', 'No')
+      .then(async function (response) {
+        if (response) {
+          sessionStorage.clear();
+          myalert.success("SUCCESS!", "Account logged out.");
+          $timeout(function () {
+            location.href = '../../';
+          }, 1000);
+        }
+      })
+  }
 
   // Form Validator
   $scope.validateForm = (fields) => {
