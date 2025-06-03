@@ -33,7 +33,7 @@ app
                   <img ng-if="col.type === 'image'" ng-src="{{ item[col.field] }}" alt="image">
                 </td>
                 <td ng-if="actions && actions.length">
-                  <button ng-repeat="action in actions" ng-click="action.action(item)">
+                  <button ng-repeat="action in actions" ng-if="!action.hide" ng-click="action.action(item)">
                     <i ng-if="action.icon" class="{{ action.icon }}" style="font-size:{{ action.iconSize }}"></i>
                     <span ng-if="action.label">{{ action.label }}</span>
                   </button>

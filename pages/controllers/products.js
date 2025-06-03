@@ -19,8 +19,26 @@ app.controller("products", function ($scope) {
     $scope.table_data = undefined;
   }
 
-  $scope.addStock = (data) => {
-    console.log(data)
+  $scope.addStock = async (data) => {
+    const [quantity, expiry] = data;
+
+    const payload = {
+      path: '../services/stock/create.php',
+      data: {
+        quantity: quantity.value,
+        expiry: expiry.value,
+        product_id: $scope.product_id,
+        account_id: 1
+      }
+    }
+
+    const response = await $scope.create(payload);
+    console.log(response)
+    if (response === 'success') {
+      $scope.getProduct();
+      $('#modal_id').modal('hide');
+      myalert.success("SUCCESS!", "Stock added.");
+    }
   }
 
   $scope.openModalAddStock = (data) => {
@@ -29,13 +47,14 @@ app.controller("products", function ($scope) {
     $scope.modal_header = "Add Stock";
     $scope.add_stock_field = {
       fields: [
-        { model: 'addStockModel', type: 'number', placeholder: 'Enter Quantity' },
+        { model: 'addStockQuantityModel', type: 'number', placeholder: 'Enter Quantity' },
+        { model: 'addStockExpiryModel', type: 'date', },
       ],
       action: $scope.addStock
     };
 
     $('#modal_id').modal('show');
-    console.log(data);
+    $scope.product_id = data.id;
   }
 
   $scope.viewToUpdateProduct = (data) => {
@@ -211,6 +230,8 @@ app.controller("products", function ($scope) {
   }
   // GET Category
   $scope.getCategory = async () => {
+    $scope.clearModal();
+
     const column = [
       { label: "#", type: "counter", field: "counter" },
       { label: "Category", type: "text", field: "category" },
@@ -266,6 +287,8 @@ app.controller("products", function ($scope) {
   }
   // GET Product Type
   $scope.getType = async () => {
+    $scope.clearModal();
+
     const column = [
       { label: "#", type: "counter", field: "counter" },
       { label: "Type", type: "text", field: "type" },
@@ -321,6 +344,8 @@ app.controller("products", function ($scope) {
   }
   // GET Product Size
   $scope.getSize = async () => {
+    $scope.clearModal();
+
     const column = [
       { label: "#", type: "counter", field: "counter" },
       { label: "Size", type: "text", field: "size" },
@@ -376,6 +401,8 @@ app.controller("products", function ($scope) {
   }
   // GET Suppliers
   $scope.getSupplier = async () => {
+    $scope.clearModal();
+
     const column = [
       { label: "#", type: "counter", field: "counter" },
       { label: "Supplier", type: "text", field: "supplier" },

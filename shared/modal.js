@@ -43,8 +43,8 @@ app.directive("customModal", function ($parse) {
                 </custom-table>
               </div>
             </div>
-            <div class="modal-footer">
-              <button ng-click="submitInputFields()" class="btn btn-success btn-sm"><i class="fa fa-paper-plane"></i> Submit</button>
+            <div ng-if="inputFields" class="modal-footer">
+              <button ng-click="submitInputFields()" class="btn btn-success btn-sm">Submit</button>
             </div>
           </div>
         </div>

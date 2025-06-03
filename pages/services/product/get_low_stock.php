@@ -3,9 +3,7 @@
     $data = json_decode(file_get_contents("php://input"));
     $output = array();
 
-    $query = mysqli_query($connection, 
-    "SELECT * FROM supplier");
-
+    $query = mysqli_query($connection, "SELECT * FROM product WHERE quantity_stock <= quantity_limit ORDER BY quantity_stock ASC");
     while($row = mysqli_fetch_assoc($query)) {
         $output[] = $row;
     }

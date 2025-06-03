@@ -1,4 +1,4 @@
-<div class="route-container">
+<div class="route-container" ng-init="init()">
   <!-- Header -->
   <div class="route-header">
     <div class="route-header-title">
@@ -16,9 +16,9 @@
     <div class="product-container">
       <custom-table 
         search="search"
-        column="stocks_columns" 
-        data="stocks_data" 
-        actions="stocks_actions">
+        column="product_columns" 
+        data="product_data" 
+        actions="product_actions">
       </custom-table>
     </div>
 
@@ -85,6 +85,13 @@
     </div>
   </div>
 </div>
+
+<!-- Modal -->
+<custom-modal
+  modal-id="add_to_cart_modal_id"
+  modal-title="modal_header"
+  input-fields="add_to_cart_quantity">
+</custom-modal>
 
 <style>
   .product-container {

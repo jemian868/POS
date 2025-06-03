@@ -1,4 +1,4 @@
-<div class="route-container">
+<div class="route-container" ng-init="init()">
   <!-- Header -->
   <div class="route-header">
     <div class="route-header-title">
@@ -48,19 +48,13 @@
         </div>
       </div>
 
-      <!-- <input 
-        ng-model="test" 
-        ng-model-options="{ debounce: 1000 }" 
-        ng-change="handleInputChange(test)" 
-        type="text"> -->
-
       <div class="restock-indicator-wrapper">
         <div class="restock-header">
           <label>
             <small>RESTOCK INDICATOR</small>
             <i class="fa-solid fa-ellipsis-vertical" />
           </label>
-          <span><i class="fa-regular fa-clock"></i> For month of August, 2025</span>
+          <span><i class="fa fa-calendar-days"></i> {{currentDate}}</span>
         </div>
         <div class="restock-content">
           <custom-table 

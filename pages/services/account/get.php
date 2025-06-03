@@ -4,7 +4,7 @@
     $output = array();
 
     $query = mysqli_query($connection, 
-    "SELECT * FROM supplier");
+    "SELECT *, CONCAT(firstname, ' ', lastname) AS fullname FROM account WHERE status = 'active' AND designation != 'Admin'");
 
     while($row = mysqli_fetch_assoc($query)) {
         $output[] = $row;
