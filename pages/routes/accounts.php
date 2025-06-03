@@ -116,7 +116,6 @@
     overflow: auto;
   }
 
-  
   .select-container {
     padding: 0 45px 0 0;
     margin-bottom: 10px;
