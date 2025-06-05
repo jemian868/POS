@@ -168,7 +168,6 @@ app.controller("accounts", function ($scope) {
       if (response === 'success') {
         $scope.addAccountFname = '';
         $scope.addAccountLname = '';
-        $scope.addAccountDesignation = '';
         $scope.username = '';
         $scope.password = '';
         myalert.success("SUCCESS!", "Account created.");

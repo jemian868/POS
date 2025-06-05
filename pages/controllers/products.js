@@ -228,6 +228,27 @@ app.controller("products", function ($scope) {
       throw error;
     }
   }
+  // UPDATE Category
+  $scope.viewToUpdateCategory = (data) => {
+    $scope.updateCategoryId = data.id;
+    $scope.input_action = { model: data.category, placeholder: 'Update category', icon: 'fa fa-edit', action: $scope.updateCategory };
+  }
+  $scope.updateCategory = async (data) => {
+    const payload = {
+      path: '../services/category/update.php',
+      data: {
+        id: $scope.updateCategoryId,
+        category: data,
+      }
+    }
+
+    const response = await $scope.update(payload);
+    if (response === 'success') {
+      $scope.getCategory();
+      $scope.input_action = { placeholder: 'Create category', action: $scope.createCategory }
+      myalert.success("SUCCESS!", "Category updated.");
+    }
+  }
   // GET Category
   $scope.getCategory = async () => {
     $scope.clearModal();
@@ -238,6 +259,7 @@ app.controller("products", function ($scope) {
     ]
     const action = [
       { icon: "fa fa-square-check", iconSize: '15px', action: $scope.selectCategory },
+      { icon: "fa fa-edit", iconSize: '15px', action: $scope.viewToUpdateCategory },
     ];
 
     const payload = {
@@ -285,6 +307,27 @@ app.controller("products", function ($scope) {
       throw error;
     }
   }
+  // UPDATE Product Type
+  $scope.viewToUpdateType = (data) => {
+    $scope.updateTypeId = data.id;
+    $scope.input_action = { model: data.type, placeholder: 'Update product type', icon: 'fa fa-edit', action: $scope.updateType };
+  }
+  $scope.updateType = async (data) => {
+    const payload = {
+      path: '../services/type/update.php',
+      data: {
+        id: $scope.updateTypeId,
+        type: data,
+      }
+    }
+
+    const response = await $scope.update(payload);
+    if (response === 'success') {
+      $scope.getType();
+      $scope.input_action = { placeholder: 'Create product type', action: $scope.createType }
+      myalert.success("SUCCESS!", "Type updated.");
+    }
+  }
   // GET Product Type
   $scope.getType = async () => {
     $scope.clearModal();
@@ -295,6 +338,7 @@ app.controller("products", function ($scope) {
     ]
     const action = [
       { icon: "fa fa-square-check", iconSize: '15px', action: $scope.selectType },
+      { icon: "fa fa-edit", iconSize: '15px', action: $scope.viewToUpdateType },
     ];
 
     const payload = {
@@ -342,6 +386,27 @@ app.controller("products", function ($scope) {
       throw error;
     }
   }
+  // UPDATE Product Size
+  $scope.viewToUpdateSize = (data) => {
+    $scope.updateSizeId = data.id;
+    $scope.input_action = { model: data.size, placeholder: 'Update size', icon: 'fa fa-edit', action: $scope.updateSize };
+  }
+  $scope.updateSize = async (data) => {
+    const payload = {
+      path: '../services/size/update.php',
+      data: {
+        id: $scope.updateSizeId,
+        size: data,
+      }
+    }
+
+    const response = await $scope.update(payload);
+    if (response === 'success') {
+      $scope.getSize();
+      $scope.input_action = { placeholder: 'Create product size', action: $scope.createSize }
+      myalert.success("SUCCESS!", "Size updated.");
+    }
+  }
   // GET Product Size
   $scope.getSize = async () => {
     $scope.clearModal();
@@ -352,6 +417,7 @@ app.controller("products", function ($scope) {
     ]
     const action = [
       { icon: "fa fa-square-check", iconSize: '15px', action: $scope.selectSize },
+      { icon: "fa fa-edit", iconSize: '15px', action: $scope.viewToUpdateSize },
     ];
 
     const payload = {
@@ -399,6 +465,27 @@ app.controller("products", function ($scope) {
       throw error;
     }
   }
+  // UPDATE Supplier
+  $scope.viewToUpdateSupplier = (data) => {
+    $scope.updateSupplierId = data.id;
+    $scope.input_action = { model: data.supplier, placeholder: 'Update supplier', icon: 'fa fa-edit', action: $scope.updateSupplier };
+  }
+  $scope.updateSupplier = async (data) => {
+    const payload = {
+      path: '../services/supplier/update.php',
+      data: {
+        id: $scope.updateSupplierId,
+        supplier: data,
+      }
+    }
+
+    const response = await $scope.update(payload);
+    if (response === 'success') {
+      $scope.getSupplier();
+      $scope.input_action = { placeholder: 'Create supplier', action: $scope.createSupplier }
+      myalert.success("SUCCESS!", "Product updated.");
+    }
+  }
   // GET Suppliers
   $scope.getSupplier = async () => {
     $scope.clearModal();
@@ -409,6 +496,7 @@ app.controller("products", function ($scope) {
     ]
     const action = [
       { icon: "fa fa-square-check", iconSize: '15px', action: $scope.selectSupplier },
+      { icon: "fa fa-edit", iconSize: '15px', action: $scope.viewToUpdateSupplier },
     ];
 
     const payload = {

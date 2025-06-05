@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="route-header">
     <div class="route-header-title">
-      <span><i class="fa fa-user-secret"></i> / Accounts</span>
+      <span><i class="fa fa-people-group"></i> / Accounts</span>
       <b>Accounts</b>
     </div>
     <div class="route-header-actions">

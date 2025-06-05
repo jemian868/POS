@@ -23,46 +23,20 @@
     </div>
 
     <div class="purchased-container">
-      <table>
-        <thead>
-          <tr>
-            <th>ITEM</th>
-            <th>TYPE</th>
-            <th>SIZE</th>
-            <th>PRICE</th>
-            <th>QTY</th>
-            <th>TOTAL</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Paracetamol</td>
-            <td>Syrup</td>
-            <td>500ml</td>
-            <td>₱ 55.3</td>
-            <td>2</td>
-            <td>₱ 110.6</td>
-            <td>
-              <button>
-              <i class="fa fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="6"></td>
-            <td><b>₱ 110.6</b></td>
-          </tr>
-        </tbody>
-      </table>
-
+      <custom-table 
+        column="cart_columns" 
+        data="cart_data" 
+        actions="cart_actions">
+      </custom-table>
+      <small>TOTAL AMOUNT: <b>{{totalAmountPaid | currency:'₱ ':2}}</b></small>
       <div class="payment-container">
         <span>CASH</span>
         <div>
           <span>₱</span>
           <input 
             type="text" 
-            ng-model="cash" 
+            ng-model="cash"
+            ng-change="computeAmount()"
             oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
         </div>
 
@@ -72,6 +46,7 @@
           <input 
             type="text" 
             ng-model="discount" 
+            ng-change="computeAmount()"
             oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
         </div>
 
@@ -115,29 +90,9 @@
     box-shadow: rgba(0, 0, 0, 0.1) 0rem 0.25rem 0.375rem -0.0625rem,
     rgba(0, 0, 0, 0.06) 0rem 0.125rem 0.25rem -0.0625rem;
   }
-  .purchased-container table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .purchased-container table thead tr th {
-    padding: 8px 5px;
-    color: #344767;
-  }
-  .purchased-container table tbody tr td {
-    padding: 8px 5px;
-    color: #344767de;
-  }
-  .purchased-container table tbody tr td button {
-    padding: 5px 10px;
-    border: none;
-    background: transparent;
-    outline: none;
-    color: #344767;
-    font-weight: 900;
-    font-size: 14px;
-  }
-  .purchased-container table tbody tr td button:active {
-    transform: scale(0.9);
+  .purchased-container > small {
+    padding: 10px;
+    font-size: 13px;
   }
 
   .payment-container {

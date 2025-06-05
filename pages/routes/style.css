@@ -51,6 +51,15 @@
   border-bottom: 0.5px solid #7f7f89;
 }
 
+.navigation-container h6 span {
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.navigation-container h6 small {
+  font-size: 11px;
+}
+
 .navigation-container ul {
   list-style: none;
   padding: 0;

@@ -13,7 +13,8 @@
       <div class="navigation-container">
         <h6>
           <i class="fa fa-store"></i> <br/>
-          POS
+          <span>{{account_designated}}</span> <br/>
+          <small>{{account_name}}</small> <br/>
         </h6>
         <ul>
           <li ng-repeat="route in routes">

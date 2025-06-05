@@ -28,8 +28,8 @@ app.directive("customModal", function ($parse) {
 
               <!-- INPUT with ACTION -->
               <div ng-if="inputAction" class="input-action-container">
-                <input type="text" ng-model="modalInputAction" placeholder="{{inputAction.placeholder}}">
-                <button ng-click="inputAction.action(modalInputAction); modalInputAction=''" class="btn btn-success btn-sm"><i class="fa fa-plus"></i></button>
+                <input type="text"  ng-model="inputAction.model" placeholder="{{inputAction.placeholder}}">
+                <button ng-click="inputAction.action(inputAction.model); inputAction.model=''" class="btn btn-success btn-sm"><i class="{{inputAction.icon || 'fa fa-plus'}}"></i></button>
               </div>
 
               <!-- TABLE -->

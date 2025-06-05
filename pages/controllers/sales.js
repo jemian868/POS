@@ -1,5 +1,6 @@
 app.controller("sales", function ($scope) {
   $scope.init = () => {
+    $scope.getCart();
     $scope.getProduct();
     $scope.generateBatchBumber();
   }
@@ -18,8 +19,96 @@ app.controller("sales", function ($scope) {
     const min = String(now.getMinutes()).padStart(2, '0');
     const ss = String(now.getSeconds()).padStart(2, '0');
 
-    $scope.batchNumber = `${yyyy}${mm}${dd}${hh}${min}${ss}-1`;
+    $scope.batchNumber = `${yyyy}${mm}${dd}${hh}${min}${ss}-${$scope.account_id}`;
     console.log($scope.batchNumber);
+  }
+
+  $scope.removeFromCart = async (data) => {
+    const payload = {
+      path: '../services/cart/delete.php',
+      data: {
+        id: data.id,
+      }
+    }
+
+    const response = await $scope.delete(payload);
+    console.log(response);
+    if (response === 'success') {
+      $scope.getCart();
+      myalert.success("SUCCESS!", "Item removed from cart.");
+    }
+  }
+
+  $scope.computeAmount = () => {
+    if ($scope.cash) {
+      const cash = parseFloat($scope.cash);
+      const discount = $scope.discount ? parseFloat($scope.discount) : 0;
+      $scope.change = (cash + discount) - $scope.totalAmountPaid;
+    } else {
+      $scope.cash = undefined;
+      $scope.change = undefined;
+    }
+  }
+
+  $scope.processPayment = async () => {
+    if ($scope.change < 0) {
+      myalert.warning("WARNING!", "Unable to process payment.");
+    } else {
+      const payload = {
+        path: '../services/sales/create.php',
+        data: {
+          account_id: $scope.account_id,
+          cash: $scope.cash,
+          discount: $scope.discount,
+        }
+      }
+
+      const response = await $scope.create(payload);
+      console.log(response)
+      if (response === 'success') {
+        $scope.getCart();
+        $scope.getProduct();
+        $scope.cash = undefined;
+        $scope.discount = undefined;
+        $scope.change = undefined;
+        myalert.success("SUCCESS!", "Items sold.");
+      } else {
+        myalert.error("ERROR!", "Something went wrong.");
+      }
+    }
+  }
+
+  $scope.cart_columns = [
+    { label: "#", type: "counter", field: "counter" },
+    { label: "ITEM", type: "text", field: "product_name" },
+    { label: "TYPE", type: "text", field: "type_name" },
+    { label: "SIZE", type: "text", field: "size_name" },
+    { label: "PRICE", type: "currency", field: "product_price" },
+    { label: "QTY", type: "text", field: "quantity" },
+    { label: "TOTAL", type: "currency", field: "total_price" },
+  ];
+  $scope.cart_actions = [
+    { icon: "fa fa-trash", iconSize: '15px', action: $scope.removeFromCart }
+  ];
+  $scope.getCart = async () => {
+    $scope.totalAmountPaid = 0;
+    const payload = {
+      path: '../services/cart/get.php',
+      data: {
+        account_id: $scope.account_id,
+      }
+    }
+
+    const data = await $scope.get(payload);
+    $scope.cart_data = data.map(item => {
+      const total_price = item.quantity * item.product_price;
+      $scope.totalAmountPaid += total_price;
+      return {
+        ...item,
+        total_price
+      };
+    });
+    $scope.$applyAsync();
   }
 
   $scope.addToCart = async (data) => {
@@ -38,18 +127,21 @@ app.controller("sales", function ($scope) {
         }
       }
 
-      console.log(payload.data)
-
       const response = await $scope.create(payload);
       if (response === 'success') {
         $scope.addToCartQuantity = '';
         $('#add_to_cart_modal_id').modal('hide');
         myalert.success("SUCCESS!", "Added to cart.");
+      } else if (response === 'updated') {
+        $scope.addToCartQuantity = '';
+        $('#add_to_cart_modal_id').modal('hide');
+        myalert.success("SUCCESS!", "Quantity added.");
       } else if (response === 'insuficient') {
         myalert.warning("WARNING!", "Quantity exceeds available stock.");
       } else {
         myalert.error("ERROR!", "Product not found.");
       }
+      $scope.getCart();
     } catch (error) {
       throw error
     }
