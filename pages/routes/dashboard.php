@@ -18,7 +18,7 @@
         icon="fa fa-user-injured"
         icolor="linear-gradient(195deg, rgb(102, 187, 106), rgb(67, 160, 71))"
         sub="TOTAL PATIENTS"
-        value="867"
+        value="{{registeredProfiles}}"
         label="Patients"
       />
       
@@ -26,7 +26,7 @@
         icon="fa fa-bed-pulse"
         icolor="linear-gradient(195deg, rgb(73, 163, 241), rgb(26, 115, 232))"
         sub="TOTAL ADMITTED"
-        value="320"
+        value="{{numberOfAddmitted}}"
         label="Admitted"
       />
       
@@ -34,17 +34,17 @@
         icon="fa fa-people-group"
         icolor="linear-gradient(195deg, rgb(236, 64, 122), rgb(216, 27, 96))"
         sub="TOTAL DISCHARGED"
-        value="12"
+        value="{{numberOfDischarged}}"
         label="Discharged"
       />
     </div>
 
     <div class="restock-indicator-container">
-      <div ng-controller="ChartController" class="chart-wrapper">
+      <div class="chart-wrapper">
         <div id="salesChart" class="chart" />
         <div class="chart-title-container">
           <label>Monthly Sales</label>
-          <span>2025</span>
+          <span>{{currentYear}}</span>
         </div>
       </div>
 
@@ -54,7 +54,7 @@
             <small>RESTOCK INDICATOR</small>
             <i class="fa-solid fa-ellipsis-vertical" />
           </label>
-          <span><i class="fa fa-calendar-days"></i> {{currentDate}}</span>
+          <span><i class="fa fa-calendar-days"></i> {{currentMonthYear}}</span>
         </div>
         <div class="restock-content">
           <custom-table 

@@ -64,7 +64,8 @@
         search="search"
         column="product_columns" 
         data="product_data" 
-        actions="product_actions">
+        actions="product_actions"
+        fill="fillEmpty">
       </custom-table>
     </div>
   </div>

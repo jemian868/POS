@@ -24,6 +24,7 @@
       <select ng-model="addAccountDesignation" ng-change="generateCredentials()">
         <option value='Pharmacist'>Pharmacist</option>
         <option value='Registrar'>Registrar</option>
+        <option value='Nurse'>Nurse</option>
       </select>
 
       <span>USERNAME</span>

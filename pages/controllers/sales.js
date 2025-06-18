@@ -1,4 +1,4 @@
-app.controller("sales", function ($scope) {
+app.controller("sales", function ($scope, $http) {
   $scope.init = () => {
     $scope.getCart();
     $scope.getProduct();
@@ -20,7 +20,10 @@ app.controller("sales", function ($scope) {
     const ss = String(now.getSeconds()).padStart(2, '0');
 
     $scope.batchNumber = `${yyyy}${mm}${dd}${hh}${min}${ss}-${$scope.account_id}`;
-    console.log($scope.batchNumber);
+  }
+
+  $scope.attachPrescription = () => {
+    console.log();
   }
 
   $scope.removeFromCart = async (data) => {
@@ -32,7 +35,6 @@ app.controller("sales", function ($scope) {
     }
 
     const response = await $scope.delete(payload);
-    console.log(response);
     if (response === 'success') {
       $scope.getCart();
       myalert.success("SUCCESS!", "Item removed from cart.");
@@ -58,19 +60,21 @@ app.controller("sales", function ($scope) {
         path: '../services/sales/create.php',
         data: {
           account_id: $scope.account_id,
-          cash: $scope.cash,
+          image: sessionStorage.getItem('uploadedPrescriptionFile'),
+          cash: parseFloat($scope.cash - $scope.change),
           discount: $scope.discount,
         }
       }
 
       const response = await $scope.create(payload);
-      console.log(response)
       if (response === 'success') {
         $scope.getCart();
         $scope.getProduct();
+        $scope.generateBatchBumber();
         $scope.cash = undefined;
         $scope.discount = undefined;
         $scope.change = undefined;
+        sessionStorage.removeItem('uploadedPrescriptionFile');
         myalert.success("SUCCESS!", "Items sold.");
       } else {
         myalert.error("ERROR!", "Something went wrong.");
@@ -160,6 +164,7 @@ app.controller("sales", function ($scope) {
     };
   }
 
+  $scope.fillEmpty = true;
   $scope.product_columns = [
     { label: "#", type: "counter", field: "counter" },
     { label: "Product", type: "text", field: "name" },
@@ -183,4 +188,46 @@ app.controller("sales", function ($scope) {
       throw error
     }
   }
+
+  // Attach Prescription
+  $scope.previewImage = "../../uploads/default.png";
+  $scope.previewFile = function (input) {
+    const file = input.files[0];
+    if (file && file.type.match('image.*')) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        $scope.$apply(function () {
+          $scope.previewImage = e.target.result;
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  $scope.uploadImage = function () {
+    const fileInput = document.querySelector('input[type="file"]');
+    const file = fileInput.files[0];
+
+    if (!file) {
+      myalert.warning('WARNING!', "Please select an image.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    $http.post("../services/uploadPrescription.php", formData, {
+      transformRequest: angular.identity,
+      headers: { "Content-Type": undefined },
+    }).then(function (response) {
+      if (response.data.success) {
+        $('#attachPrescriptionModal').modal('hide');
+        myalert.success('SUCCESS!', 'Image uploaded.');
+        $scope.previewImage = "../../uploads/default.png";
+        sessionStorage.setItem('uploadedPrescriptionFile', response.data.filename);
+      }
+    }).catch(function (error) {
+      myalert.warning('WARNING!', error);
+    });
+  };
 });

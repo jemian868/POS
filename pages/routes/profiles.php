@@ -1,4 +1,4 @@
-<div class="route-container">
+<div class="route-container" ng-init="init()">
   <!-- Header -->
   <div class="route-header">
     <div class="route-header-title">
@@ -16,22 +16,25 @@
     <!-- Add profile -->
     <div class="add-profile-container">
       <small>PERSONAL DETAILS</small>
-      <input type="text" placeholder="Full Name">
-      <input type="date" placeholder="Birth Date">
-      <input type="text" placeholder="Gender">
-      <select>
+      <input ng-model="addProfileFullname" type="text" placeholder="Full Name">
+      <input ng-model="addProfileBirtDate" type="date" placeholder="Birth Date">
+      <select ng-model="addProfileGender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+      <select ng-model="addProfileCivilStatus">
         <option value="Single">Single</option>
         <option value="Married">Married</option>
         <option value="Widowed">Widowed</option>
       </select>
-      <input type="text" placeholder="Nationality">
-      <input type="text" placeholder="Contact">
-      <input type="text" placeholder="Address">
+      <input ng-model="addProfileNationality" type="text" placeholder="Nationality">
+      <input ng-model="addProfileContact" type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="Contact">
+      <input ng-model="addProfileAddress" type="text" placeholder="Address">
       
       <div class="buttons-container">
-        <button class="btn btn-success"><i class="fa fa-plus"></i> Create Profile</button>
-        <!-- <button class="btn btn-primary"><i class="fa fa-edit"></i> Update </button>
-        <button class="btn btn-danger"><i class="fa fa-times"></i> Cancel</button> -->
+        <button ng-if="!updateProfileId" ng-click="createProfile()" class="btn btn-success"><i class="fa fa-plus"></i> Create Profile</button>
+        <button ng-if="updateProfileId" ng-click="updateProfile()" class="btn btn-primary"><i class="fa fa-edit"></i> Update </button>
+        <button ng-if="updateProfileId" ng-click="clearProfileForm()" class="btn btn-danger"><i class="fa fa-times"></i> Cancel</button>
       </div>
     </div>
 
@@ -43,6 +46,37 @@
         data="profiles_data" 
         actions="profiles_actions">
       </custom-table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<custom-modal
+  modal-id="modal_id"
+  modal-title="modal_header"
+  modal-size="modal-lg"
+  input-action="input_action"
+  table-data="table_data">
+</custom-modal>
+
+<div class="modal fade" id="addImageModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><small>ADD PHOTO</small></h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="add-image-container">
+          <div class="imageViewer">
+            <img ng-src="{{previewImage}}" alt="Selected Image" />
+          </div>
+          <input type="file" accept="image/*" onchange="angular.element(this).scope().previewFile(this)" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button ng-click="uploadImage()" type="button" class="btn btn-success saveImageButton">Save image</button>
+      </div>
     </div>
   </div>
 </div>
@@ -92,5 +126,29 @@
     height: 100%;
     float: right;
     overflow: auto;
+  }
+  
+  .add-image-container {
+    width: 100%;
+  }
+  .add-image-container input {
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+  }
+  .imageViewer {
+    width: 100%;
+    height: 150px;
+    text-align: center;
+  }
+  .imageViewer img {
+    height: 100%;
+  }
+  .saveImageButton {
+    font-size: 14px;
   }
 </style>

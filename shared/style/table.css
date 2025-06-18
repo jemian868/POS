@@ -71,3 +71,18 @@
 .table-body table tbody tr td button:active {
   transform: scale(0.9);
 }
+
+.table-body table tfoot {
+  bottom: 0;
+  position: sticky;
+  background: #fff;
+}
+
+.table-body table tfoot tr td {
+  padding: 20px 0;
+  font-size: 13px;
+}
+
+.table-body table tfoot tr td span {
+  padding: 0 10px;
+}

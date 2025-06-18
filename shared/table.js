@@ -6,13 +6,22 @@ app
         search: "=",
         column: "=",
         data: "=",
+        footer: "=",
         actions: "=",
+        fill: "=?",
       },
       link: function (scope, element, attrs) {
         if (!attrs.column || !attrs.data) {
+          console.log(attrs.data);
+
           throw new Error(
             "column and data props are required for <custom-table> directive."
           );
+        }
+
+        // Set default for fill if undefined
+        if (typeof scope.fill === "undefined") {
+          scope.fill = false;
         }
       },
       template: `
@@ -28,9 +37,9 @@ app
               <tr ng-repeat="(index, item) in (filtered = (data | filter:search))">
                 <td ng-repeat="col in column">
                   <span ng-if="col.type === 'counter'">{{ index+1 }}</span>
-                  <span ng-if="col.type === 'text'">{{ item[col.field] }}</span>
+                  <span ng-if="col.type === 'text'">{{ (fill && (!item[col.field])) ? 'N/A' : item[col.field] }}</span>
                   <span ng-if="col.type === 'currency'">{{ item[col.field] | currency:'₱ ':2 }}</span>
-                  <img ng-if="col.type === 'image'" ng-src="{{ item[col.field] }}" alt="image">
+                  <img ng-if="col.type === 'image' && item[col.field]" ng-src="{{ item[col.field] }}" alt="image">
                 </td>
                 <td ng-if="actions && actions.length">
                   <button ng-repeat="action in actions" ng-if="!action.hide" ng-click="action.action(item)">
@@ -43,6 +52,16 @@ app
                 <td colspan="{{column.length + 1}}"><center>No record found.</center></td>
               </tr>
             </tbody>
+            <tfoot ng-if="footer">
+              <tr>
+                <td colspan="{{column.length + (actions && actions.length ? 1 : 0)}}">
+                  <span ng-repeat="foot in footer">
+                    {{foot.label}}:
+                    <b>{{foot.value | currency:'₱ ':2}}</b>
+                  </span>
+                </td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       `,

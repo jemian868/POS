@@ -16,24 +16,26 @@
     <div class="reports-container">
       <div class="header">
         <div class="date-filter-container">
-          <input type="date">
-          <input type="date">
-          <button class="btn btn-success"><i class="fa fa-search"></i></button>
+          <input ng-model="from" type="date">
+          <input ng-model="to" type="date">
+          <button ng-click="getReport()" class="btn btn-success"><i class="fa fa-search"></i></button>
         </div>
 
-        <select>
-          <option>Sales Reports</option>
-          <option>Stocks Reports</option>
-          <option>Profiles Reports</option>
+        <select ng-model="report_type">
+          <option value="sales">Sales Reports</option>
+          <option value="stocks">Stocks Reports</option>
+          <option value="profiles">Profiles Reports</option>
         </select>
-        <button class="btn btn-warning"><i class="fa fa-file-csv"></i></button>
+        <button ng-click="exportReport()" class="btn btn-warning"><i class="fa fa-file-csv"></i></button>
       </div>
 
       <div class="body">
         <custom-table 
           search="search"
-          column="stocks_columns" 
-          data="stocks_data" >
+          column="table_columns" 
+          data="table_data" 
+          footer="table_footer"
+          fill="fillEmpty" >
         </custom-table>
       </div>
     </div>

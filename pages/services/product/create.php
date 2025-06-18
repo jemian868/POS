@@ -7,7 +7,7 @@
     $original_price = $data->original_price;
     $selling_price = $data->selling_price;
     $size_id = $data->size_id;
-    $type_id = $data->type_id;
+    $type_id = $data->type_id ?? 0;
     $category_id = $data->category_id;
     $supplier_id = $data->supplier_id;
 

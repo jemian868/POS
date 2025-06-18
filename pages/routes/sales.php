@@ -18,7 +18,8 @@
         search="search"
         column="product_columns" 
         data="product_data" 
-        actions="product_actions">
+        actions="product_actions"
+        fill="fillEmpty">
       </custom-table>
     </div>
 
@@ -28,7 +29,7 @@
         data="cart_data" 
         actions="cart_actions">
       </custom-table>
-      <small>TOTAL AMOUNT: <b>{{totalAmountPaid | currency:'₱ ':2}}</b></small>
+      <small>TOTAL AMOUNT: <b>{{totalAmountPaid | currency:'₱ ':2}}</b> <i data-toggle="modal" data-target="#attachPrescriptionModal" class="fa fa-image"></i></small>
       <div class="payment-container">
         <span>CASH</span>
         <div>
@@ -68,6 +69,29 @@
   input-fields="add_to_cart_quantity">
 </custom-modal>
 
+<!-- Add Prescription Image -->
+<div class="modal fade" id="attachPrescriptionModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><small>ADD PHOTO</small></h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="add-image-container">
+          <div class="imageViewer">
+            <img ng-src="{{previewImage}}" alt="Selected Image" />
+          </div>
+          <input type="file" accept="image/*" onchange="angular.element(this).scope().previewFile(this)" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button ng-click="uploadImage()" type="button" class="btn btn-success saveImageButton">Save image</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <style>
   .product-container {
     width: 59.5%;
@@ -93,6 +117,15 @@
   .purchased-container > small {
     padding: 10px;
     font-size: 13px;
+  }
+  .purchased-container > small > i {
+    float: right;
+    font-size: 15px;
+    cursor: pointer;
+    color: #344767;
+  }
+  .purchased-container > small > i:active {
+    transform: scale(0.9);
   }
 
   .payment-container {
@@ -127,5 +160,29 @@
     width: 100%;
     padding: 8px 5px;
     font-size: 13px;
+  }
+
+  .add-image-container {
+    width: 100%;
+  }
+  .add-image-container input {
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+  }
+  .imageViewer {
+    width: 100%;
+    height: 150px;
+    text-align: center;
+  }
+  .imageViewer img {
+    height: 100%;
+  }
+  .saveImageButton {
+    font-size: 14px;
   }
 </style>

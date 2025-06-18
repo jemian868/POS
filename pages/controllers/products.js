@@ -73,7 +73,7 @@ app.controller("products", function ($scope) {
     const updateProductForm = [
       { model: $scope.addProductCategory, label: 'Category', rule: 'number' },
       { model: $scope.addProductName, label: 'Product Name', rule: 'required' },
-      { model: $scope.addProductType, label: 'Product Type', rule: 'number' },
+      { model: $scope.addProductType, label: 'Product Type' },
       { model: $scope.addProductSize, label: 'Product Size', rule: 'number' },
       { model: $scope.addProductOriginalPrice, label: 'Original Price', rule: 'number' },
       { model: $scope.addProductSellingPrice, label: 'Selling Price', rule: 'number' },
@@ -119,6 +119,7 @@ app.controller("products", function ($scope) {
     $scope.addProductSupplier = '';
   }
 
+  $scope.fillEmpty = true;
   $scope.product_columns = [
     { label: "#", type: "counter", field: "counter" },
     { label: "Stock", type: "text", field: "name" },
@@ -160,7 +161,7 @@ app.controller("products", function ($scope) {
       const createProductForm = [
         { model: $scope.addProductCategory, label: 'Category', rule: 'number' },
         { model: $scope.addProductName, label: 'Product Name', rule: 'required' },
-        { model: $scope.addProductType, label: 'Product Type', rule: 'number' },
+        { model: $scope.addProductType, label: 'Product Type' },
         { model: $scope.addProductSize, label: 'Product Size', rule: 'number' },
         { model: $scope.addProductOriginalPrice, label: 'Original Price', rule: 'number' },
         { model: $scope.addProductSellingPrice, label: 'Selling Price', rule: 'number' },

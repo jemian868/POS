@@ -2,6 +2,7 @@
 include "../connection.php";
 
 $data = json_decode(file_get_contents("php://input"));
+$image = $data->image ?? null;
 $account_id = $data->account_id ?? null;
 $cash = $data->cash ?? 0;
 $discount = $data->discount ?? 0;
@@ -69,14 +70,14 @@ foreach ($cartItems as $item) {
 // Collect unique batch_numbers from cart items
 $uniqueBatchNumbers = array_unique(array_column($cartItems, 'batch_number'));
 
-$paymentStmt = $connection->prepare("INSERT INTO payment(batch_number, amount, discount) VALUES (?, ?, ?)");
+$paymentStmt = $connection->prepare("INSERT INTO payment(image, batch_number, amount, discount) VALUES (?, ?, ?, ?)");
 
 foreach ($uniqueBatchNumbers as $batchNumber) {
     // You can decide if you want to insert the same cash & discount for all batch_numbers,
     // or calculate amounts per batch_number from cart items.
     // For now, I will insert the same cash and discount for each batch_number.
 
-    $paymentStmt->bind_param("sdd", $batchNumber, $cash, $discount);
+    $paymentStmt->bind_param("ssis", $image, $batchNumber, $cash, $discount);
     if (!$paymentStmt->execute()) {
         throw new Exception("payment_insert_failed");
     }
