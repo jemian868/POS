@@ -4,7 +4,10 @@ app.controller("profiles", function ($scope, $http, $filter) {
   }
 
   $scope.openNewTab = (data) => {
-    window.open('../other/viewProfileDetails.php?id=' + data.id, '_blank');
+    console.log(data);
+    console.log();
+
+    window.open('../other/viewProfileDetails.php?id=' + data.id + '&userRole=' + $scope.account_designated, '_blank');
   }
 
   // DISCHARGED PATIENT

@@ -5,6 +5,10 @@ angular.module('recordApp', []).controller('recordController', function ($scope,
   $scope.init = () => {
     const params = new URLSearchParams(window.location.search);
     $scope.record_id = params.get('id');
+    $scope.userRole = params.get('userRole');
+
+    console.log($scope.userRole);
+
     $scope.getPatientRecords();
   }
 
@@ -26,31 +30,76 @@ angular.module('recordApp', []).controller('recordController', function ($scope,
       $scope.patientAddress = record.address;
       $scope.patientAdmitted = record.date_admitted;
       $scope.patientDischarged = record.date_discharged;
-      $scope.recordsList = JSON.parse(record.records);
-
-      console.log($scope.recordsList);
+      $scope.recordList = JSON.parse(record.records);
 
     })
   }
 
+  $scope.recordList = [];
   $scope.addRecord = () => {
-    if ($scope.recordLabel && $scope.recordValue) {
+    if ($scope.addRecordTitleModel) {
       const pushTo = {
-        label: $scope.recordLabel.charAt(0).toUpperCase() + $scope.recordLabel.substr(1).toLowerCase(),
-        value: $scope.recordValue.charAt(0).toUpperCase() + $scope.recordValue.substr(1).toLowerCase()
+        title: $scope.addRecordTitleModel,
+        list: []
       }
+      const cleanRecord = angular.copy(pushTo);
+      $scope.recordList.push(cleanRecord);
 
-      $scope.recordsList.push(pushTo);
-      $scope.updateRecords($scope.recordsList);
+      const cleanedList = JSON.parse(angular.toJson($scope.recordList));
+      $scope.updateRecords(cleanedList);
     }
   }
-
+  $scope.passValueUpdateRecord = (record, index) => {
+    $scope.recordIndex = index;
+    $scope.updateRecordTitleModel = record.title;
+  }
+  $scope.updateRecord = () => {
+    $scope.recordList[$scope.recordIndex].title = $scope.updateRecordTitleModel;
+    $scope.updateRecords($scope.recordList);
+  }
   $scope.removeRecord = (index) => {
     myalert.confirm('Info!', 'Continue to remove this record?', 'Yes', 'No')
       .then(async function (response) {
         if (response) {
-          $scope.recordsList.splice(index, 1);
-          $scope.updateRecords($scope.recordsList);
+          $scope.recordList.splice(index, 1);
+          $scope.updateRecords($scope.recordList);
+        }
+      })
+  }
+
+  $scope.passValueAddRecordList = (record, index) => {
+    $scope.recordListIndex = index;
+  }
+  $scope.addRecordList = () => {
+    if ($scope.addRecordLabelModel && $scope.addRecordValueModel) {
+      const pushTo = {
+        label: $scope.addRecordLabelModel,
+        data: $scope.addRecordValueModel,
+      }
+      const cleanRecordList = angular.copy(pushTo);
+      $scope.recordList[$scope.recordListIndex].list.push(cleanRecordList);
+
+      const cleanedRecordList = JSON.parse(angular.toJson($scope.recordList));
+      $scope.updateRecords(cleanedRecordList);
+    }
+  }
+  $scope.passValueUpdateRecordList = (record, recordIndex, list, listIndex) => {
+    $scope.recordIndex = recordIndex;
+    $scope.recordListIndex = listIndex;
+    $scope.updateRecordLabelModel = list.label;
+    $scope.updateRecordValueModel = list.data;
+  }
+  $scope.updateRecordList = () => {
+    $scope.recordList[$scope.recordIndex].list[$scope.recordListIndex].label = $scope.updateRecordLabelModel;
+    $scope.recordList[$scope.recordIndex].list[$scope.recordListIndex].data = $scope.updateRecordValueModel;
+    $scope.updateRecords($scope.recordList);
+  }
+  $scope.removeRecordList = (recordIndex, listIndex) => {
+    myalert.confirm('Info!', 'Continue to remove this list from record?', 'Yes', 'No')
+      .then(async function (response) {
+        if (response) {
+          $scope.recordList[recordIndex].list.splice(listIndex, 1);
+          $scope.updateRecords($scope.recordList);
         }
       })
   }
@@ -62,6 +111,9 @@ angular.module('recordApp', []).controller('recordController', function ($scope,
     }).then(function (response) {
       if (response.data === 'success') {
         $('#addRecordModal').modal('hide');
+        $('#updateRecordModal').modal('hide');
+        $('#addRecordListModal').modal('hide');
+        $('#updateRecordListModal').modal('hide');
         $scope.getPatientRecords();
         myalert.success("SUCCESS!", "Record updated.")
       }
